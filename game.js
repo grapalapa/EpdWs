@@ -1,13 +1,13 @@
 (function() {
-	var Game = function(canvasId) {
+	var Game = function (canvasId) {
 		var canvas = document.getElementById(canvasId);
 		var screen = canvas.getContext('2d');
-		var gameSize = { x: canvas.width, y: canvas.height };
+		var gameSize = {x: canvas.width, y: canvas.height};
 
 		this.bodies = createInvaders(this).concat([new Player(this, gameSize)]);
 
 		var self = this;
-		var tick = function() {
+		var tick = function () {
 			self.update();
 			self.draw(screen, gameSize);
 			requestAnimationFrame(tick);
@@ -17,7 +17,16 @@
 	};
 
 	Game.prototype = {
-		update: function() {
+		update: function () {
+			var bodies = this.bodies;
+			var notColliding = function (b1) {
+				return bodies.filter(function (b2) {
+						return colliding(b1, b2);
+					}).length === 0;
+			};
+
+			this.bodies = this.bodies.filter(notColliding);
+
 			for (var i = 0; i < this.bodies.length; i++) {
 				this.bodies[i].update();
 			}
@@ -127,7 +136,12 @@
 	};
 
 	var colliding = function(b1, b2) {
-
+		return !(b1 === b2 ||
+				b1.center.x + b1.size.x / 2 < b2.center.x - b2.size.x / 2 ||
+				b1.center.y + b1.size.y / 2 < b2.center.y - b2.size.y / 2 ||
+				b1.center.x - b1.size.x / 2 > b2.center.x + b2.size.x / 2 ||
+				b1.center.y - b1.size.y / 2 > b2.center.y + b2.size.y / 2
+		);
 	};
 
 	window.onload = function() {
