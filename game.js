@@ -128,9 +128,19 @@
 	};
 
 	var drawRect = function(screen, body) {
-		screen.fillRect(body.center.x - body.size.x / 2,
-						body.center.y - body.size.y / 2,
-						body.size.x, body.size.y)
+		var invaderImg = new Image();
+		var playerImg = new Image();
+		invaderImg.src = 'SeaMonster.png';
+		playerImg.src = 'space_shuttle_black.png';
+		if (body instanceof Invader) {
+			screen.drawImage(invaderImg, body.center.x - body.size.x / 2, body.center.y - body.size.y / 2)
+		} else if (body instanceof Player) {
+			screen.drawImage(playerImg, body.center.x - body.size.x, body.center.y - body.size.y)
+		} else {
+			screen.fillRect(body.center.x - body.size.x / 2,
+							body.center.y - body.size.y / 2,
+							body.size.x, body.size.y)
+		}
 	};
 
 	var Keyboarder = function() {
